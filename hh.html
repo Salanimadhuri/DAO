@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DAO Voting Pattern Analyzer - Aptos</title>
+  <!-- Font Awesome CDN -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      position: relative;
+    }
+
+    /* Navbar */
+    nav {
+      background-color: #6c5ce7;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    nav .logo {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 1.5rem;
+    }
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    nav ul li a:hover {
+      color: #dcd6f7;
+    }
+
+    .top-left-img {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      width: 120px;
+      height: auto;
+      z-index: 1000;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 0;
+      background: 
+        linear-gradient(150deg, rgba(74, 144, 226, 0.85), rgba(108, 92, 231, 0.85)),
+        url('img.jpg') no-repeat center center;
+      background-size: cover;
+      background-position: center center;
+      color: white;
+      border-radius: 0 0 30px 30px;
+      position: relative;
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .info-slider {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+    .info-card {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .info-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .info-card h4 {
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    .info-card p {
+      font-size: 1.2rem;
+      color: #777;
+    }
+
+    .content-section {
+      background: #ffffff;
+      padding: 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 2rem 0;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #6c5ce7;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 3rem;
+    }
+
+    .feature-card {
+      padding: 2rem;
+      background-color: #f8f9fc;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    .feature-card .fa {
+      font-size: 2.5rem;
+      color: #6c5ce7;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h4 {
+      font-size: 1.5rem;
+      color: #333;
+      margin-bottom: 0.8rem;
+    }
+
+    .feature-card p {
+      font-size: 1rem;
+      color: #777;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      background-color: #6c5ce7;
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+      margin-top: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .cta-button:hover {
+      background-color: #5b4bc4;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #2d2d2d;
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    footer p {
+      margin: 0.5rem 0;
+    }
+    .footer-icons {
+      margin-top: 1rem;
+    }
+    .footer-icons a {
+      color: white;
+      margin: 0 0.5rem;
+      font-size: 1.2rem;
+      transition: color 0.3s ease;
+    }
+    .footer-icons a:hover {
+      color: #6c5ce7;
+    }
+
+    @media (max-width: 768px) {
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      .top-left-img {
+        width: 100px;
+        top: 90px;
+        left: 15px;
+      }
+      nav ul {
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <a href="#" class="logo">DAO Analyzer</a>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#what-is-dao">About</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="https://dao-voting-dashboard-azwk.onrender.com/">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <!-- Logo -->
+  <img src="logo.jpg" alt="Logo" class="top-left-img" />
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <div class="container">
+      <h1>DAO Voting Pattern Analyzer</h1>
+      <p>Empowering Transparent Governance on Aptos</p>
+       <!-- Information Slider -->
+       <div class="info-slider">
+        <div class="info-card">
+          <h4>💡 Data Insights</h4>
+          <p>Discover patterns in DAO voting, ensuring transparent decision-making for all stakeholders.</p>
+        </div>
+        <div class="info-card">
+          <h4>🔍 Detailed Analysis</h4>
+          <p>Explore detailed voting behavior and trends to improve governance practices and participation rates.</p>
+        </div>
+        <div class="info-card">
+          <h4>📊 Voting Trends</h4>
+          <p>Analyze how DAO members are voting, identify participation patterns, and make data-driven decisions.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
+
+  <!-- DAO Section -->
+  <div class="container" id="what-is-dao">
+    <div class="content-section">
+      <h2>🤖 What is a DAO?</h2>
+      <div class="features-grid">
+        <!-- Feature Cards -->
+        <div class="feature-card">
+          <i class="fa fa-users-cog"></i>
+          <h4>👥 Decentralized Governance</h4>
+          <p>DAOs distribute decision-making power across members, eliminating centralized authority.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-handshake"></i>
+          <h4>🤝 Community-Driven</h4>
+          <p>Every token holder gets a say, allowing inclusive participation in important decisions.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-vote-yea"></i>
+          <h4>🗳 Transparent Voting</h4>
+          <p>All votes are recorded on-chain, promoting transparency and trust in governance.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-cogs"></i>
+          <h4>⚙ Smart Contract Powered</h4>
+          <p>Operations are automated via smart contracts, ensuring consistency and fairness.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-lightbulb"></i>
+          <h4>💡 Innovation Catalyst</h4>
+          <p>DAOs enable rapid experimentation and innovation in governance and collaboration.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-university"></i>
+          <h4>🏛 DAO Treasury</h4>
+          <p>Funded by the community, the DAO treasury supports proposals that benefit the ecosystem.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="container" id="features">
+    <div class="content-section">
+      <h2>DAO Voting Pattern Analyzer Features</h2>
+      <div class="features-grid">
+        <!-- Feature Cards -->
+        <div class="feature-card">
+          <i class="fa fa-balance-scale"></i>
+          <h4>🏛 DAO Comparison</h4>
+          <p>Compare the governance models and voting patterns of multiple DAOs across different sectors.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-history"></i>
+          <h4>⏳ Historical Analysis</h4>
+          <p>Track the evolution of governance decisions over time to see how DAOs have adapted to changes.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-users"></i>
+          <h4>🧮 Participation Metrics</h4>
+          <p>Analyze voter turnout, participation rates, and trends in governance participation.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-calendar-alt"></i>
+          <h4>📆 Proposal Calendar</h4>
+          <p>Stay updated on upcoming votes, proposal deadlines, and historical proposal data.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-link"></i>
+          <h4>🔗 Blockchain Integration</h4>
+          <p>Leverage the trust and security of the Aptos blockchain to ensure transparency in all voting processes.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fa fa-globe"></i>
+          <h4>🌍 Global Impact</h4>
+          <p>Discover how DAOs are influencing decentralized governance and decision-making on a global scale.</p>
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <a href="https://dao-voting-dashboard-azwk.onrender.com/" class="cta-button">Explore the Full Dashboard</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 DAO Voting Pattern Analyzer. All rights reserved.</p>
+    <p>Made with ❤ on Aptos</p>
+    <div class="footer-icons">
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-discord"></i></a>
+      <a href="#"><i class="fab fa-github"></i></a>
+    </div>
+  </footer>
+
+</body>
+</html>
